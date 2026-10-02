@@ -1,5 +1,4 @@
 import streamlit as st
-from openai import OpenAI
 
 # ==========================================
 # CONFIGURAÇÃO DA PÁGINA
@@ -16,26 +15,119 @@ st.subheader("Seu assistente inteligente para processos seletivos")
 
 st.write(
     "Analise seu currículo, prepare-se para uma vaga "
-    "e pratique uma entrevista personalizada com Inteligência Artificial."
+    "e pratique uma entrevista personalizada."
 )
 
 # ==========================================
-# CONEXÃO COM A IA
+# MODO DE TESTE
 # ==========================================
 
-client = OpenAI(
-    api_key=st.secrets["OPENAI_API_KEY"]
-)
+MODO_TESTE = True
 
+
+# ==========================================
+# FUNÇÃO DE IA
+# ==========================================
 
 def perguntar_ia(instrucoes):
 
-    resposta = client.responses.create(
-        model="gpt-5.6-luna",
-        input=instrucoes
-    )
+    # ======================================
+    # MODO TESTE
+    # ======================================
 
-    return resposta.output_text
+    if MODO_TESTE:
+
+        # Se estiver pedindo perguntas
+        if "Crie exatamente 5 perguntas" in instrucoes:
+
+            return """
+1. Conte um pouco sobre sua formação e como ela se relaciona com a vaga.
+2. Quais conhecimentos ou habilidades você possui que podem contribuir para essa função?
+3. Conte sobre uma experiência em que você precisou trabalhar em equipe.
+4. Qual é uma habilidade que você gostaria de desenvolver profissionalmente?
+5. Por que você acredita que essa vaga combina com seus objetivos profissionais?
+"""
+
+        # Se estiver pedindo análise
+        else:
+
+            return """
+## 📊 ANÁLISE DA ENTREVISTA
+
+### 1. PONTOS FORTES
+
+O candidato demonstrou interesse pela oportunidade
+e apresentou informações relacionadas à sua formação,
+experiências e conhecimentos.
+
+Também foi possível observar características
+importantes para processos seletivos, como
+comunicação, organização e interesse em aprender.
+
+### 2. PONTOS A DESENVOLVER
+
+O candidato pode desenvolver respostas mais detalhadas,
+utilizando exemplos concretos de experiências acadêmicas,
+profissionais ou projetos realizados.
+
+Também é importante relacionar cada resposta
+diretamente aos requisitos da vaga.
+
+### 3. COMPATIBILIDADE COM A VAGA
+
+A compatibilidade deve ser analisada considerando
+a formação, os conhecimentos e as experiências
+apresentadas pelo candidato.
+
+Os principais pontos de atenção são os requisitos
+da vaga que ainda não aparecem claramente no currículo.
+
+### 4. CURRÍCULO REFORMULADO
+
+NOME
+
+OBJETIVO PROFISSIONAL
+
+Buscar uma oportunidade profissional relacionada
+à área da vaga desejada, colocando em prática os
+conhecimentos adquiridos durante a formação.
+
+RESUMO PROFISSIONAL
+
+Estudante em formação, interessado em desenvolver
+experiência profissional e aplicar seus conhecimentos
+em um ambiente de trabalho.
+
+FORMAÇÃO
+
+Informações apresentadas no currículo original.
+
+EXPERIÊNCIA
+
+Informações apresentadas no currículo original.
+
+COMPETÊNCIAS
+
+- Organização
+- Trabalho em equipe
+- Comunicação
+- Interesse em aprendizado
+
+IDIOMAS
+
+Informações apresentadas no currículo original.
+
+OUTRAS INFORMAÇÕES RELEVANTES
+
+Informações apresentadas pelo candidato durante
+a entrevista.
+"""
+
+    # ======================================
+    # FUTURA IA REAL
+    # ======================================
+
+    return ""
 
 
 # ==========================================
@@ -193,7 +285,7 @@ if st.session_state.entrevista_iniciada:
 
         st.divider()
 
-        st.header("🎤 Entrevista com a IA")
+        st.header("🎤 Entrevista")
 
         st.write(
             f"Pergunta {indice + 1} "
@@ -289,53 +381,9 @@ Analise a entrevista:
 Agora produza um relatório.
 
 1. PONTOS FORTES
-
-Identifique os principais pontos fortes
-demonstrados pelo candidato.
-
 2. PONTOS A DESENVOLVER
-
-Identifique aspectos que podem ser melhorados.
-
 3. COMPATIBILIDADE COM A VAGA
-
-Mostre quais requisitos da vaga aparecem
-no perfil do candidato e quais precisam
-ser desenvolvidos.
-
 4. CURRÍCULO REFORMULADO
-
-Crie uma nova versão profissional do currículo.
-
-Utilize SOMENTE informações verdadeiras
-presentes no currículo original ou nas respostas.
-
-NÃO invente:
-
-- experiências;
-- empresas;
-- cursos;
-- habilidades;
-- idiomas;
-- resultados profissionais.
-
-Organize o currículo em:
-
-NOME
-
-OBJETIVO PROFISSIONAL
-
-RESUMO PROFISSIONAL
-
-FORMAÇÃO
-
-EXPERIÊNCIA
-
-COMPETÊNCIAS
-
-IDIOMAS
-
-OUTRAS INFORMAÇÕES RELEVANTES
 """
 
         resultado = perguntar_ia(instrucoes)
